@@ -56,14 +56,14 @@ export default function Index() {
           <HomeCard
             icon={<FontAwesome5 name="microscope" size={34} color="white" />}
             title="Diagnostics"
-            subtitle="Tests and health checkup"
+            subtitle="Test and health checkup"
           />
         </View>
       </View>
 
       <View style={styles.blogsSection}>
         <TouchableOpacity
-          onPress={() => router.push("/blogs")}
+          onPress={() => router.push("/../blogs")}
           style={styles.viewAllButton}
         >
           <Text style={styles.viewAllText}>View All articles</Text>
