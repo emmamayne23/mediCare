@@ -15,6 +15,8 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen name="index" options={{ title: "MediCare" }} />
+      <Stack.Screen name="specialties/index" options={{ title: "Specialties" }} />
+      <Stack.Screen name="blogs/index" options={{ title: "Health Articles" }} />
     </Stack>
   );
 }

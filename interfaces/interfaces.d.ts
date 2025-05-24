@@ -23,3 +23,10 @@ interface HealthBlogs {
     publisherName: string;
     description: string;
 }
+
+interface Specialties {
+    id: string,
+    specialty: string,
+    description: string,
+    icon_url :string,
+}

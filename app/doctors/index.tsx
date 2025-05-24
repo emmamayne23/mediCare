@@ -2,11 +2,11 @@ import { API_URL } from "@/constants/constant";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 export default function DoctorsScreen() {
@@ -21,7 +21,7 @@ export default function DoctorsScreen() {
         const data = response.data;
         // console.log(data);
         setDoctors(data);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching doctors", error);
       } finally {
         setLoading(false);
