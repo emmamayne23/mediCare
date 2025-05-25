@@ -30,3 +30,23 @@ interface Specialties {
     description: string,
     icon_url :string,
 }
+
+interface SpecialtyDoctors {
+    id: string,
+    name: string,
+    specialty: string,
+    img: string,
+    yearsExperience: number,
+    qualifications: string
+}
+
+interface DoctorDetails {
+    id: string,
+    name: string,
+    bio: string,
+    qualifications: string,
+    profileImage: string,
+    experience: number,
+    specialty: string,
+    available: boolean,
+}
