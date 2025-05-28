@@ -1,3 +1,4 @@
+
 import { API_URL } from "@/constants/constant";
 import axios from "axios";
 import { useRouter } from "expo-router";
@@ -30,7 +31,7 @@ export default function Index() {
   const [specialties, setSpecialties] = useState<Specialties[]>([]);
 
   useEffect(() => {
-    const fetchSpecilaties = async () => {
+    const fetchSpecialties = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/specialties`)
         const data = response.data
@@ -40,7 +41,7 @@ export default function Index() {
       }
     }
 
-    fetchSpecilaties()
+    fetchSpecialties()
   }, [])
 
   // Hero images (replace with your actual images)
@@ -131,7 +132,7 @@ export default function Index() {
           contentContainerStyle={styles.specialtiesContainer}
         >
           {specialties.map((specialty) => (
-            <TouchableOpacity key={specialty.id} style={styles.specialtyCard}>
+            <TouchableOpacity key={specialty.id} style={styles.specialtyCard} onPress={() => router.push(`/specialties/${specialty.id}`)}>
               <View style={styles.specialtyIconContainer}>
                 <Image 
                   source={{ uri: specialty.icon_url }} 

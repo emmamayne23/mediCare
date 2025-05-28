@@ -1,11 +1,14 @@
 import { API_URL } from '@/constants/constant'
 import axios from 'axios'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default function DoctorDetailsPage() {
     const { id } = useLocalSearchParams()
+
+    const router = useRouter()
+    
     const [doctorDetails, setDoctorDetails] = useState<DoctorDetails | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -53,6 +56,9 @@ export default function DoctorDetailsPage() {
       <Text style={styles.infoText}>{doctorDetails.experience} years</Text>
       <Text style={styles.sectionTitle}>Bio</Text>
       <Text style={styles.infoText}>{doctorDetails.bio}</Text>
+      <TouchableOpacity style={styles.button} onPress={() => router.push(`/appointments/book/${id}`)}>
+        <Text style={{ color: "#fff", textAlign: "center" }}>Book Appointment</Text>
+      </TouchableOpacity>
     </ScrollView>
   )
 }
@@ -104,4 +110,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'red',
   },
+  button: {
+    backgroundColor: "#058ef7",
+    paddingVertical: 5,
+    width: "100%",
+    marginHorizontal: "auto",
+    borderRadius: 10
+  }
 })

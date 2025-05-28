@@ -50,3 +50,41 @@ interface DoctorDetails {
     specialty: string,
     available: boolean,
 }
+
+interface Slots {
+    id: string;
+    doctorId: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    isBooked: boolean | null
+}
+
+interface Timebook {
+    id: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    doctorId: string;
+    doctorName: string | null;
+    doctorImage: string | null;
+    doctorQualifications: string | null;
+    doctorSpecialty: string | null;
+}
+
+interface UserProfile {
+    id: string,
+    name: string,
+    email: string,
+    profileImage: string
+}
+
+interface AllAppointments {
+    appointmentId: string;
+    status: "confirmed" | "cancelled" | "completed";
+    doctorName: string;
+    doctorProfileImage: string | null;
+    appointmentDate: string;
+    appointmentTime: string;
+    specialty: string;
+}
