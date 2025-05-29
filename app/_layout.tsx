@@ -24,7 +24,7 @@ export default function RootLayout() {
       />
       <Stack.Screen
         name="specialties/index"
-        options={{ title: "Specialties" }}
+        options={{ title: "Find a Doctor" }}
       />
       <Stack.Screen name="blogs/index" options={{ title: "Health Articles" }} />
       <Stack.Screen
@@ -41,6 +41,8 @@ export default function RootLayout() {
       <Stack.Screen name="appointments/confirm/[id]/index" options={{ title: "Confirm" }} />
       <Stack.Screen name="appointments/confirmed/index" options={{ title: "Confirmed" }} />
       <Stack.Screen name="profile/[id]/index" options={{ title: "My Profile" }} />
+      <Stack.Screen name="blogs/[id]/index" options={{ title: "Blog" }} />
+      <Stack.Screen name="doctors/index" options={{ title: "Find Doctors" }} />
     </Stack>
   );
 }

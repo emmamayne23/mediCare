@@ -26,16 +26,17 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
-        elevation: 8,
+        elevation: 5,
     },
     iconContainer: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
         padding: 12,
         borderRadius: 14,
         marginRight: 16,
+        flex: 2,
+        marginBottom: 5
     },
     textContainer: {
-        flex: 1,
+        flex: 2,
     },
     title: {
         color: '#fff',
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         color: 'rgba(255, 255, 255, 0.8)',
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: '400',
     }
 })

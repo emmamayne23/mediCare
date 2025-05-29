@@ -4,7 +4,6 @@ import axios from "axios";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Dimensions,
   FlatList,
   Image,
   ScrollView,
@@ -23,12 +22,11 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { healthBlogs } from "@/blogs";
 
-const { width } = Dimensions.get('window');
-
 export default function Index() {
   const blogs: HealthBlogs[] = healthBlogs;
   const router = useRouter();
   const [specialties, setSpecialties] = useState<Specialties[]>([]);
+  const [doctors, setDoctors] = useState<Doctor[]>([])
 
   useEffect(() => {
     const fetchSpecialties = async () => {
@@ -44,7 +42,20 @@ export default function Index() {
     fetchSpecialties()
   }, [])
 
-  // Hero images (replace with your actual images)
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/doctors`)
+        const data = response.data
+        setDoctors(data)
+      } catch (error) {
+        console.error("Could not fetch doctors", error)
+      }
+    }
+
+    fetchDoctors()
+  }, [])
+
   const heroImages = [
     { id: 1, uri: 'https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg' },
     { id: 2, uri: 'https://img.freepik.com/free-photo/medical-stethoscope-with-blue-background_23-2147652363.jpg' },
@@ -80,7 +91,7 @@ export default function Index() {
 
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.welcomeText}>Welcome back!</Text>
+        <Text style={styles.welcomeText}>What are you looking for?</Text>
         <Text style={styles.subtitle}>Find your perfect doctor</Text>
       </View>
 
@@ -88,33 +99,62 @@ export default function Index() {
       <View style={styles.cards}>
         <View style={styles.cardRow}>
           <HomeCard
-            icon={<FontAwesome6 name="user-doctor" size={34} color="white" />}
+            icon={<FontAwesome6 name="user-doctor" size={50} color="white" />}
             title="Doctors"
-            subtitle="Find a Doctor"
+            subtitle="Book Appointment"
           />
 
           <HomeCard
             icon={
-              <MaterialIcons name="medical-services" size={34} color="white" />
+              <MaterialIcons name="medical-services" size={50} color="white" />
             }
             title="Departments"
-            subtitle="Search Top Departments"
+            subtitle="Search Top Specialties"
           />
         </View>
 
         <View style={styles.cardRow}>
           <HomeCard
-            icon={<Feather name="phone-call" size={34} color="white" />}
+            icon={<Feather name="phone-call" size={50} color="white" />}
             title="eConsultation"
             subtitle="Get Tele consult with us"
           />
 
           <HomeCard
-            icon={<FontAwesome5 name="microscope" size={34} color="white" />}
+            icon={<FontAwesome5 name="microscope" size={50} color="white" />}
             title="Diagnostics"
-            subtitle="Test and health checkup"
+            subtitle="Test & health checkup"
           />
         </View>
+      </View>
+
+      {/* Doctors Section */}
+      <View style={styles.sectionContainer}>
+      <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Recently Visited Doctors</Text>
+          <TouchableOpacity onPress={() => router.push("/doctors")}>
+            <Text style={styles.viewAllLink}>View All</Text>
+          </TouchableOpacity>
+        </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.specialtiesContainer}
+      >
+        {doctors.map((doctor) => (
+          <TouchableOpacity key={doctor.id} style={styles.specialtyCard} onPress={() => router.push(`/doctors/${doctor.id}`)}>
+          <View style={styles.specialtyIconContainer}>
+            <Image 
+              source={{ uri: doctor.image }} 
+              style={styles.specialtyIcon} 
+              resizeMode="cover"
+            />
+          </View>
+          <Text style={styles.specialtyText}>{doctor.name}</Text>
+          <Text style={styles.specialtyText}>{doctor.specialty}</Text>
+        </TouchableOpacity>
+        ))}
+      </ScrollView>
       </View>
 
       {/* Specialties Section */}
@@ -183,16 +223,23 @@ const styles = StyleSheet.create({
   },
   heroContainer: {
     height: 200,
+    width: 380,
+    marginHorizontal: "auto",
+    marginTop: 10,
     position: 'relative',
+    borderRadius: 10
   },
   heroImageContainer: {
-    width: width,
+    width: 350,
     height: 200,
+    borderRadius: 10,
+    marginHorizontal: 5,
   },
   heroImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+    borderRadius: 10
   },
   heroOverlay: {
     position: 'absolute',
@@ -201,6 +248,8 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 20,
+    borderBottomEndRadius: 10,
+    borderBottomStartRadius: 10
   },
   heroText: {
     color: 'white',
@@ -232,16 +281,14 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   cards: {
-    paddingHorizontal: 15,
     marginBottom: 20,
   },
   cardRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
+    justifyContent: "center",
   },
   welcomeText: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '700',
     color: '#0f172a',
     marginBottom: 5,
@@ -276,9 +323,15 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   specialtyCard: {
-    width: 100,
+    width: 125,
     marginRight: 15,
     alignItems: 'center',
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.2)",
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: 10
   },
   specialtyIconContainer: {
     width: 70,

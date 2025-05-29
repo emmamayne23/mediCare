@@ -12,14 +12,8 @@ export default function BlogsScreen() {
       <Text>BlogsScreen</Text>
 
       <View style={styles.blogsSection}>
-        {/* <TouchableOpacity
-          onPress={() => router.push("/blogs")}
-          style={styles.viewAllButton}
-        >
-          <Text style={styles.viewAllText}>View All articles</Text>
-        </TouchableOpacity> */}
         {blogs.map((item) => (
-          <TouchableOpacity key={item.id} style={styles.blogCard}>
+          <TouchableOpacity key={item.id} style={styles.blogCard} onPress={() => router.push(`/blogs/${item.id}`)}>
             {item.image && (
               <Image source={{ uri: item.image }} style={styles.blogImage} />
             )}

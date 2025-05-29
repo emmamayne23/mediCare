@@ -3,13 +3,13 @@ import axios from "axios";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function SingleSpecialtyScreen() {
@@ -88,3 +88,4 @@ const styles = StyleSheet.create({
   name: { fontSize: 18, fontWeight: "600" },
   sub: { fontSize: 14, color: "#475569", marginTop: 2 },
 });
+
