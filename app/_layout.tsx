@@ -20,6 +20,7 @@ export default function RootLayout() {
         options={{
           title: "MediCare",
           headerRight: () => <LoginButton />,
+          headerBackVisible: false,
         }}
       />
       <Stack.Screen
@@ -29,18 +30,49 @@ export default function RootLayout() {
       <Stack.Screen name="blogs/index" options={{ title: "Health Articles" }} />
       <Stack.Screen
         name="specialties/[id]/index"
-        options={{ title: "Doctors" }}
+        options={{ title: "Specialties" }}
       />
       <Stack.Screen
         name="doctors/[id]/index"
         options={{ title: "Book an Appointment" }}
       />
-      <Stack.Screen name="(auth)/login" options={{ title: "Login" }} />
-      <Stack.Screen name="(auth)/signup" options={{ title: "Signup" }} />
-      <Stack.Screen name="appointments/book/[id]/index" options={{ title: "Book" }} />
-      <Stack.Screen name="appointments/confirm/[id]/index" options={{ title: "Confirm" }} />
-      <Stack.Screen name="appointments/confirmed/index" options={{ title: "Confirmed" }} />
-      <Stack.Screen name="profile/[id]/index" options={{ title: "My Profile" }} />
+      <Stack.Screen 
+        name="(auth)/login" 
+        options={{ 
+          title: "Login",
+        }} 
+      />
+      <Stack.Screen 
+        name="(auth)/signup" 
+        options={{ 
+          title: "Signup",
+        }} 
+      />
+      <Stack.Screen 
+        name="appointments/book/[id]/index" 
+        options={{ 
+          title: "Book",
+        }} 
+      />
+      <Stack.Screen 
+        name="appointments/confirm/[id]/index" 
+        options={{ 
+          title: "Confirm",
+        }} 
+      />
+      <Stack.Screen 
+        name="appointments/confirmed/index" 
+        options={{ 
+          title: "Confirmed",
+          headerBackVisible: false 
+        }} 
+      />
+      <Stack.Screen 
+        name="profile/[id]/index" 
+        options={{ 
+          title: "My Profile",
+        }} 
+      />
       <Stack.Screen name="blogs/[id]/index" options={{ title: "Blog" }} />
       <Stack.Screen name="doctors/index" options={{ title: "Find Doctors" }} />
     </Stack>

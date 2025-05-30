@@ -4,19 +4,36 @@ import { MaterialIcons } from '@expo/vector-icons'
 import axios from 'axios'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 
 export default function ConfirmAppoinmentScreen() {
   const { id } = useLocalSearchParams()
   const router = useRouter()
   const [userId, setUserId] = useState<string | null>(null)
   const [details, setDetails] = useState<Timebook>()
+  const [loading, setLoading] = useState(true)
+  const [confirming, setConfirming] = useState(false)
 
   useEffect(() => {
     const fetchDetails = async () => {
-      const response = await axios.get(`${API_URL}/api/time-slots/book/${id}`)
-      const data = response.data
-      setDetails(data)
+      try {
+        const response = await axios.get(`${API_URL}/api/time-slots/book/${id}`)
+        const data = response.data
+        setDetails(data)
+      } catch (error) {
+        Alert.alert("Error", "Could not fetch appointment details")
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchDetails()
@@ -40,6 +57,8 @@ export default function ConfirmAppoinmentScreen() {
       if (!details) {
         throw new Error("Appointment details required")
       }
+      setConfirming(true)
+      
       const response = await axios.post(`${API_URL}/api/appointments`, {
         patientId: userId,
         doctorId: details?.doctorId,
@@ -47,51 +66,123 @@ export default function ConfirmAppoinmentScreen() {
         status: "confirmed",
       })
 
-      const updateslot = await axios.put(`${API_URL}/api/time-slots/${details.id}`, {
+      await axios.put(`${API_URL}/api/time-slots/${details.id}`, {
         isBooked: true
       })
-      console.log("Appointment booked successfully: ", response.data)
-      console.log("Status changed", updateslot.data)
-      router.canGoBack() && router.back();
-      router.replace("/appointments/confirmed")
+
+      Alert.alert(
+        "Success", 
+        "Appointment confirmed successfully!",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              router.canGoBack() && router.back();
+              router.replace("/appointments/confirmed")
+            }
+          }
+        ]
+      )
     } catch (error: any) {
-      console.error("Could not confirm appointment", error)
+      Alert.alert(
+        "Error",
+        error?.response?.data || "Could not confirm appointment"
+      )
+    } finally {
+      setConfirming(false)
     }
   }
   
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Confirm Your Appointment</Text>
-      
-      <View style={styles.card}>
-        <View style={styles.doctorInfo}>
-          <Image 
-            source={{ uri: details?.doctorImage || "" }} 
-            style={styles.doctorImage}
-          />
-          <View style={styles.doctorDetails}>
-            <Text style={styles.doctorName}>{details?.doctorName}</Text>
-            <Text style={styles.doctorQualifications}>{details?.doctorQualifications}</Text>
-          </View>
-        </View>
-
-        <View style={styles.appointmentInfo}>
-          <View style={styles.infoRow}>
-            <MaterialIcons name="event" size={24} color="#058ef7" />
-            <Text style={styles.infoText}>{details?.date}</Text>
-          </View>
-          
-          <View style={styles.infoRow}>
-            <MaterialIcons name="access-time" size={24} color="#058ef7" />
-            <Text style={styles.infoText}>{details?.startTime.slice(0, 5)} - {details?.endTime.slice(0, 5)}</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmation}>
-          <Text style={styles.confirmButtonText}>Confirm Appointment</Text>
-        </TouchableOpacity>
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#2563eb" />
       </View>
-    </View>
+    )
+  }
+
+  if (!details) {
+    return (
+      <View style={styles.errorContainer}>
+        <MaterialIcons name="error-outline" size={48} color="#ef4444" />
+        <Text style={styles.errorText}>Appointment details not found</Text>
+      </View>
+    )
+  }
+  
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <MaterialIcons name="check-circle-outline" size={32} color="#2563eb" />
+          <Text style={styles.title}>Confirm Your Appointment</Text>
+          <Text style={styles.subtitle}>Please review the details below</Text>
+        </View>
+        
+        <View style={styles.card}>
+          <View style={styles.doctorInfo}>
+            <Image 
+              source={{ uri: details?.doctorImage || "" }} 
+              style={styles.doctorImage}
+            />
+            <View style={styles.doctorDetails}>
+              <Text style={styles.doctorName}>{details?.doctorName}</Text>
+              <Text style={styles.doctorQualifications}>{details?.doctorQualifications}</Text>
+            </View>
+          </View>
+
+          <View style={styles.appointmentInfo}>
+            <View style={styles.infoSection}>
+              <Text style={styles.sectionTitle}>Appointment Details</Text>
+              <View style={styles.infoRow}>
+                <MaterialIcons name="event" size={24} color="#2563eb" />
+                <View style={styles.infoContent}>
+                  <Text style={styles.infoLabel}>Date</Text>
+                  <Text style={styles.infoText}>
+                    {new Date(details?.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </Text>
+                </View>
+              </View>
+              
+              <View style={styles.infoRow}>
+                <MaterialIcons name="access-time" size={24} color="#2563eb" />
+                <View style={styles.infoContent}>
+                  <Text style={styles.infoLabel}>Time</Text>
+                  <Text style={styles.infoText}>
+                    {new Date(`2000-01-01T${details?.startTime}`).toLocaleTimeString('en-US', {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true
+                    })} - {new Date(`2000-01-01T${details?.endTime}`).toLocaleTimeString('en-US', {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true
+                    })}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          <TouchableOpacity 
+            style={[styles.confirmButton, confirming && styles.confirmButtonDisabled]} 
+            onPress={handleConfirmation}
+            disabled={confirming}
+          >
+            {confirming ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.confirmButtonText}>Confirm Appointment</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -99,14 +190,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
     padding: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#ef4444',
+    marginTop: 12,
+    textAlign: 'center',
+  },
+  content: {
+    padding: 20,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 24,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#0f172a',
-    marginBottom: 20,
-    textAlign: 'center',
+    fontWeight: '700',
+    color: '#1e293b',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#64748b',
   },
   card: {
     backgroundColor: 'white',
@@ -123,27 +243,27 @@ const styles = StyleSheet.create({
   },
   doctorInfo: {
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: 24,
   },
   doctorImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginRight: 15,
+    marginRight: 16,
   },
   doctorDetails: {
     flex: 1,
     justifyContent: 'center',
   },
   doctorName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#0f172a',
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1e293b',
     marginBottom: 4,
   },
   doctorSpecialty: {
     fontSize: 16,
-    color: '#058ef7',
+    color: '#2563eb',
     marginBottom: 4,
   },
   doctorQualifications: {
@@ -154,27 +274,47 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#e2e8f0',
     paddingTop: 20,
-    marginBottom: 20,
+  },
+  infoSection: {
+    gap: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1e293b',
+    marginBottom: 8,
   },
   infoRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
+    alignItems: 'flex-start',
+  },
+  infoContent: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  infoLabel: {
+    fontSize: 14,
+    color: '#64748b',
+    marginBottom: 2,
   },
   infoText: {
     fontSize: 16,
-    color: '#334155',
-    marginLeft: 12,
+    color: '#1e293b',
+    fontWeight: '500',
   },
   confirmButton: {
-    backgroundColor: '#058ef7',
-    paddingVertical: 15,
+    backgroundColor: '#2563eb',
+    paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
+    marginTop: 24,
+  },
+  confirmButtonDisabled: {
+    opacity: 0.7,
   },
   confirmButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },
-})
+});

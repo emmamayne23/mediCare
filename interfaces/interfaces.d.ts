@@ -4,9 +4,13 @@ interface Doctor {
     bio: string
     specialty: string,
     image: string,
+    profileImage: string,
     qualification: string,
+    qualifications: string,
     email: string,
-    experience: number
+    experience: number,
+    rating: number,
+    phone: string
 }
 
 interface HomeCard {

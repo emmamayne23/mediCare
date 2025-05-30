@@ -3,14 +3,14 @@ import axios from 'axios'
 import { useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
-    ActivityIndicator,
-    FlatList,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native'
 
 export default function SpecialtiesScreen() {
@@ -66,7 +66,7 @@ export default function SpecialtiesScreen() {
                     resizeMode="contain"
                   />
                 </View>
-                <Text style={styles.specialtyName}>{item.specialty}</Text>
+                <Text style={styles.specialtyName} numberOfLines={1}>{item.specialty}</Text>
                 <Text style={styles.specialtyDescription} numberOfLines={2}>
                   {item.description}
                 </Text>

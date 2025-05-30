@@ -1,4 +1,5 @@
 import { API_URL } from '@/constants/constant'
+import { Ionicons } from '@expo/vector-icons'
 import axios from 'axios'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
@@ -31,90 +32,170 @@ export default function DoctorDetailsPage() {
     }, [id])
 
     if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#058ef7" />
-      </View>
-    )
-  }
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#2563eb" />
+            </View>
+        )
+    }
 
-  if (!doctorDetails) {
+    if (!doctorDetails) {
+        return (
+            <View style={styles.center}>
+                <Text style={styles.errorText}>Doctor not found</Text>
+            </View>
+        )
+    }
+
     return (
-      <View style={styles.center}>
-        <Text style={styles.errorText}>Doctor not found</Text>
-      </View>
+        <ScrollView style={styles.container}>
+            <View style={styles.header}>
+                <Image source={{ uri: doctorDetails.profileImage }} style={styles.image} />
+                <View style={styles.headerContent}>
+                    <Text style={styles.name}>{doctorDetails.name}</Text>
+                    <Text style={styles.specialty}>{doctorDetails.specialty}</Text>
+                </View>
+            </View>
+
+            <View style={styles.content}>
+
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <Ionicons name="person-outline" size={24} color="#2563eb" />
+                        <Text style={styles.sectionTitle}>Bio</Text>
+                    </View>
+                    <Text style={styles.infoText}>{doctorDetails.bio}</Text>
+                </View>
+
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <Ionicons name="school-outline" size={24} color="#2563eb" />
+                        <Text style={styles.sectionTitle}>Qualifications</Text>
+                    </View>
+                    <Text style={styles.infoText}>{doctorDetails.qualifications}</Text>
+                </View>
+
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <Ionicons name="time-outline" size={24} color="#2563eb" />
+                        <Text style={styles.sectionTitle}>Experience</Text>
+                    </View>
+                    <Text style={styles.infoText}>{doctorDetails.experience} years</Text>
+                </View>
+
+                
+            </View>
+
+            <TouchableOpacity 
+                style={styles.button} 
+                onPress={() => router.push(`/appointments/book/${id}`)}
+            >
+                <Text style={styles.buttonText}>Book Appointment</Text>
+            </TouchableOpacity>
+        </ScrollView>
     )
-  }
-  return (
-    <ScrollView style={styles.container}>
-      <Image source={{ uri: doctorDetails.profileImage }} style={styles.image} />
-      <Text style={styles.name}>{doctorDetails.name}</Text>
-      <Text style={styles.specialty}>{doctorDetails.specialty}</Text>
-      <Text style={styles.sectionTitle}>Qualifications</Text>
-      <Text style={styles.infoText}>{doctorDetails.qualifications}</Text>
-      <Text style={styles.sectionTitle}>Experience</Text>
-      <Text style={styles.infoText}>{doctorDetails.experience} years</Text>
-      <Text style={styles.sectionTitle}>Bio</Text>
-      <Text style={styles.infoText}>{doctorDetails.bio}</Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.push(`/appointments/book/${id}`)}>
-        <Text style={{ color: "#fff", textAlign: "center" }}>Book Appointment</Text>
-      </TouchableOpacity>
-    </ScrollView>
-  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 100,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#0f172a',
-  },
-  specialty: {
-    fontSize: 16,
-    color: '#64748b',
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 16,
-    color: '#0f172a',
-  },
-  infoText: {
-    fontSize: 14,
-    color: '#334155',
-    marginTop: 4,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorText: {
-    fontSize: 16,
-    color: 'red',
-  },
-  button: {
-    backgroundColor: "#058ef7",
-    paddingVertical: 5,
-    width: "100%",
-    marginHorizontal: "auto",
-    borderRadius: 10
-  }
+    container: {
+        flex: 1,
+        backgroundColor: '#f8fafc',
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f8fafc',
+    },
+    header: {
+        backgroundColor: '#fff',
+        paddingBottom: 24,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e2e8f0',
+    },
+    headerContent: {
+        paddingHorizontal: 20,
+        paddingTop: 16,
+    },
+    image: {
+        width: '100%',
+        height: 300,
+        borderBottomLeftRadius: 24,
+        borderBottomRightRadius: 24,
+    },
+    name: {
+        fontSize: 28,
+        fontWeight: '700',
+        color: '#1e293b',
+        marginBottom: 4,
+    },
+    specialty: {
+        fontSize: 18,
+        color: '#64748b',
+        fontWeight: '500',
+    },
+    content: {
+        padding: 20,
+    },
+    section: {
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.05,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: '#1e293b',
+        marginLeft: 12,
+    },
+    infoText: {
+        fontSize: 16,
+        color: '#475569',
+        lineHeight: 24,
+    },
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f8fafc',
+    },
+    errorText: {
+        fontSize: 18,
+        color: '#ef4444',
+        fontWeight: '500',
+    },
+    button: {
+        backgroundColor: '#2563eb',
+        margin: 20,
+        paddingVertical: 16,
+        borderRadius: 12,
+        shadowColor: '#2563eb',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 5.46,
+        elevation: 9,
+    },
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: '600',
+    },
 })
