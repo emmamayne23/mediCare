@@ -92,3 +92,15 @@ interface AllAppointments {
     appointmentTime: string;
     specialty: string;
 }
+
+interface SingleAppointment {
+    appointmentId: string;
+    status: "confirmed" | "cancelled" | "completed"
+    doctorName: string,
+    doctorId: string,
+    doctorProfileImage: string,
+    appointmentDate: string,
+    appointmentTime: string,
+    reason: string | null;
+    specialty: string
+}

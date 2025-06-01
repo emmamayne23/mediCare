@@ -68,6 +68,12 @@ export default function RootLayout() {
         }} 
       />
       <Stack.Screen 
+        name="appointments/[id]/index" 
+        options={{ 
+          title: "Appointment Details",
+        }} 
+      />
+      <Stack.Screen 
         name="profile/[id]/index" 
         options={{ 
           title: "My Profile",

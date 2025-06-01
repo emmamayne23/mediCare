@@ -11,6 +11,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View
 } from 'react-native'
@@ -20,6 +21,7 @@ export default function ConfirmAppoinmentScreen() {
   const router = useRouter()
   const [userId, setUserId] = useState<string | null>(null)
   const [details, setDetails] = useState<Timebook>()
+  const [reason, setReason] = useState("")
   const [loading, setLoading] = useState(true)
   const [confirming, setConfirming] = useState(false)
 
@@ -29,8 +31,9 @@ export default function ConfirmAppoinmentScreen() {
         const response = await axios.get(`${API_URL}/api/time-slots/book/${id}`)
         const data = response.data
         setDetails(data)
-      } catch (error) {
+      } catch (error: any) {
         Alert.alert("Error", "Could not fetch appointment details")
+        console.error("Error fetching appointment details", error)
       } finally {
         setLoading(false)
       }
@@ -59,10 +62,11 @@ export default function ConfirmAppoinmentScreen() {
       }
       setConfirming(true)
       
-      const response = await axios.post(`${API_URL}/api/appointments`, {
+      await axios.post(`${API_URL}/api/appointments`, {
         patientId: userId,
         doctorId: details?.doctorId,
         slotId: details?.id,
+        reason: reason,
         status: "confirmed",
       })
 
@@ -165,6 +169,14 @@ export default function ConfirmAppoinmentScreen() {
                     })}
                   </Text>
                 </View>
+              </View>
+              <View>
+                <TextInput
+                  style={styles.reasonInput}
+                  placeholder='add a reason? (optional)'
+                  value={reason}
+                  onChangeText={setReason}
+                />
               </View>
             </View>
           </View>
@@ -301,6 +313,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1e293b',
     fontWeight: '500',
+  },
+  reasonInput: {
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 15
   },
   confirmButton: {
     backgroundColor: '#2563eb',

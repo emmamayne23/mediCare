@@ -146,7 +146,7 @@ export default function ProfileScreen() {
               <TouchableOpacity 
                 style={styles.appointmentCard}
                 onPress={() => router.replace({
-                  pathname: "/appointments/book/[id]",
+                  pathname: "/appointments/[id]/",
                   params: { id: item.appointmentId }
                 })}
               >
