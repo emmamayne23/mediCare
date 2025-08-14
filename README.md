@@ -1,4 +1,4 @@
-# mediCare - Mobile Application
+# MediCare - Mobile Application
 
 mediCare is a comprehensive mobile application built with React Native and Expo, designed to streamline the process of finding and booking medical appointments. It offers a user-friendly interface for patients to connect with doctors, view their profiles, and manage their health journey.
 
